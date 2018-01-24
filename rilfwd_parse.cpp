@@ -91,6 +91,12 @@ parse_data_call(char *data, size_t parcelsize)
 		return NULL;
     	}
 
+	DEBUG("num: %d", num);
+	if (num <= 0) {
+		INFO("DATA_CALL_RSP contains no data!");
+		return NULL;
+	}
+
 	int _status;
 	int suggestedRetryTime;
 	int cid;
@@ -140,7 +146,7 @@ parse_data_call(char *data, size_t parcelsize)
 		DEBUG("DATA_CALL_RSP: status=%d, suggestedRetryTime=%d, cid=%d, active=%d",
 				_status, suggestedRetryTime, cid, active);
 		DEBUG("\t type=%s, ifname=%s", type, ifname);
-		DEBUG("\t addresses=%s, ifname=%s", addresses, ifname);
+		DEBUG("\t addresses=%s", addresses);
 		DEBUG("\t dnses=%s, gateways=%s", dnses, gateways);
 
 		if (version > 9) {

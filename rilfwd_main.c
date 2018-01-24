@@ -145,6 +145,11 @@ rilfwd_main_network_init(void)
 		}
 	}
 	DEBUG("Setup masquerading after %d retries done.", retry);
+
+	// flush routing rules and set main table as default table
+	if (network_routing_rules_set_all_main(true))
+		ERROR("Faild to setup routing rules!");
+
 	return 0;
 }
 
@@ -161,11 +166,11 @@ rilfwd_main_network_setup_cb(event_timer_t *timer, void *data)
 	/* print iface info */
 	INFO("Setup for interface %s", cfg->ifname);
 	for (size_t i=0; i<cfg->addresses_len; ++i)
-		DEBUG("\t addresses[%d]: %s", i, cfg->addresses[i]);
+		DEBUG("\t addresses[%zu]: %s", i, cfg->addresses[i]);
 	for (size_t i=0; i<cfg->dnses_len; ++i)
-		DEBUG("\t dnses[%d]: %s", i, cfg->dnses[i]);
+		DEBUG("\t dnses[%zu]: %s", i, cfg->dnses[i]);
 	for (size_t i=0; i<cfg->gateways_len; ++i)
-		DEBUG("\t gateways[%d]: %s", i, cfg->gateways[i]);
+		DEBUG("\t gateways[%zu]: %s", i, cfg->gateways[i]);
 
 	/* do network setup */
 	if (cfg->gateways_len > 0) {
@@ -203,7 +208,7 @@ rilfwd_log_ril_data(char *data, size_t parcelsize)
 {
 	char *output = mem_new0(char, (parcelsize * 3) + 20);
 
-	sprintf(output, "size: %u pdata: %02x", parcelsize, *data++);
+	sprintf(output, "size: %zu pdata: %02x", parcelsize, *data++);
 	for (size_t i = 1; i < parcelsize; i++) {
 		sprintf(output, "%s %02x", output, *data++);
 	}

@@ -89,7 +89,7 @@ sockfwd_client_cb_recv(int fd, unsigned events, event_io_t *io, void *data)
 				FATAL_ERRNO("Failed to receive msg len!");
 			}
 			msg_len = ntohl(msg_len);
-			TRACE("fd=%d, msg_len=%u", fd, msg_len);
+			TRACE("fd=%d, msg_len=%zu", fd, msg_len);
 		}
 			
 		// retry till full message is received
