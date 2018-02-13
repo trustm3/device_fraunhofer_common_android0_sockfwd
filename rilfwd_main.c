@@ -105,6 +105,7 @@ switch_user(void)
 	}
 }
 
+#ifdef DNSMASQ_SYNC_ENABLED
 static pid_t
 get_pid_from_file(const char *file_name)
 {
@@ -123,6 +124,7 @@ get_pid_from_file(const char *file_name)
 	fclose(pid_file);
 	return pid;
 }
+#endif
 
 static int
 rilfwd_main_network_init(void)
@@ -181,6 +183,7 @@ rilfwd_main_network_setup_cb(event_timer_t *timer, void *data)
 		DEBUG("Setup route done.");
 	}
 
+#ifdef DNSMASQ_SYNC_ENABLED
 	file_printf(RESOLV_CONF, "# auto-generated config by %s", progname);
 	for (size_t i=0; i<cfg->dnses_len; ++i) {
 		file_printf_append(RESOLV_CONF, "nameserver %s\n", cfg->dnses[i]);
@@ -197,6 +200,7 @@ rilfwd_main_network_setup_cb(event_timer_t *timer, void *data)
 		WARN_ERRNO("cannot reload dnsmasq!");
 
 out:
+#endif
 	iface_cfg_free(cfg);
 	event_remove_timer(timer);
 	event_timer_free(timer);
